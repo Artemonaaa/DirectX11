@@ -12,7 +12,11 @@ add_executable (DirectX11 "main.cpp")
 set_property (TARGET DirectX11 PROPERTY CXX_STANDARD 23)
 
 add_subdirectory ("External/glfw")
+add_subdirectory ("External/spdlog")
+add_subdirectory ("External/glm")
 
 target_link_libraries (DirectX11 PRIVATE glfw)
+target_link_libraries (DirectX11 PRIVATE spdlog)
+target_link_libraries (DirectX11 PRIVATE glm)
 
 target_compile_definitions (DirectX11 PUBLIC GLFW_INCLUDE_NONE)

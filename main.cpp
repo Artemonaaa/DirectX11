@@ -2,6 +2,8 @@
 #include <format>
 
 #include <GLFW/glfw3.h>
+#include <spdlog/spdlog.h>
+#include <glm/vec3.hpp>
 
 auto main() -> int {
 	if (glfwInit() == GLFW_FALSE) {
