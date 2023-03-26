@@ -16,10 +16,12 @@ add_subdirectory ("External/spdlog")
 add_subdirectory ("External/glm")
 
 find_library (D3D11_LIBRARY d3d11.lib PATHS "$ENV{DXSDK_DIR}/Lib/x86" "C:/Program Files (x86)/Microsoft DirectX SDK/Lib/x86")
+find_library (D3D_COMPILER d3dcompiler.lib PATHS "$ENV{DXSDK_DIR}/Lib/x86" "C:/Program Files (x86)/Microsoft DirectX SDK/Lib/x86")
 
 target_link_libraries (DirectX11 PRIVATE glfw)
 target_link_libraries (DirectX11 PRIVATE spdlog)
 target_link_libraries (DirectX11 PRIVATE glm)
 target_link_libraries (DirectX11 PRIVATE "${D3D11_LIBRARY}")
+target_link_libraries (DirectX11 PRIVATE "${D3D_COMPILER}")
 
 target_compile_definitions (DirectX11 PUBLIC GLFW_INCLUDE_NONE)
