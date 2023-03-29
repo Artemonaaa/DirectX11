@@ -4,3 +4,9 @@
 [submodule "External/glm"]
 	path = External/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "External/nowide"]
+	path = External/nowide
+	url = https://github.com/boostorg/nowide.git
+[submodule "External/entt"]
+	path = External/entt
+	url = https://github.com/skypjack/entt.git
