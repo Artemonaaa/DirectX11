@@ -7,6 +7,7 @@
 [submodule "External/nowide"]
 	path = External/nowide
 	url = https://github.com/boostorg/nowide.git
+	branch = standalone
 [submodule "External/entt"]
 	path = External/entt
 	url = https://github.com/skypjack/entt.git
