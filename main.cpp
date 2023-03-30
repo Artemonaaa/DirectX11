@@ -12,6 +12,9 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <wrl.h>
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_glfw.h>
 
 namespace WRL = Microsoft::WRL;
 
@@ -50,6 +53,29 @@ struct TVertex {
 	glm::vec3 Color;
 };
 
+auto InitImGui(GLFWwindow* Window) -> void {
+	IMGUI_CHECKVERSION();
+
+	ImGui::CreateContext();
+
+	ImGuiIO& IO = ImGui::GetIO();
+	IO.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	IO.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+
+	ImGui::StyleColorsDark();
+	IO.Fonts->AddFontFromFileTTF("../../../Fonts/RobotoMono-Regular.ttf", 14, nullptr, IO.Fonts->GetGlyphRangesCyrillic());
+
+	ImGui::GetStyle().WindowRounding = 10.0f;
+	ImGui::GetStyle().ChildRounding = 10.0f;
+	ImGui::GetStyle().FrameRounding = 10.0f;
+	ImGui::GetStyle().GrabRounding = 10.0f;
+	ImGui::GetStyle().PopupRounding = 10.0f;
+	ImGui::GetStyle().ScrollbarRounding = 10.0f;
+
+	ImGui_ImplGlfw_InitForOther(Window, true);
+	ImGui_ImplDX11_Init(GDevice.Get(), GContext.Get());
+}
+
 auto Main() -> void {
 	if (glfwInit() == GLFW_FALSE) {
 		std::cout << "Could not initialize GLFW\n";
@@ -57,9 +83,9 @@ auto Main() -> void {
 
 	glfwSetErrorCallback([](int ErrorCode, const char* Description) {
 		std::cout << std::format("GLFW error {}: {}\n", ErrorCode, Description);
-		});
+	});
 
-	GLFWwindow* Window = glfwCreateWindow(640, 480, "My 2D game", NULL, NULL);
+	GLFWwindow* Window = glfwCreateWindow(1000, 800, "My 2D game", NULL, NULL);
 	if (Window == nullptr) {
 		std::cout << "Could not create the window\n";
 		glfwTerminate();
@@ -97,6 +123,8 @@ auto Main() -> void {
 		nullptr,
 		&GContext
 	));
+
+	InitImGui(Window);
 
 	WRL::ComPtr<ID3D11Resource> BackBuffer;
 	CheckHResult(GSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &BackBuffer));
@@ -171,6 +199,10 @@ auto Main() -> void {
 	while (glfwWindowShouldClose(Window) == GLFW_FALSE) {
 		glfwPollEvents();
 
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
 		float Color[4] = { 0.0F, 1.0F, 0.0F, 1.0F };
 		GContext->ClearRenderTargetView(GSwapChainRenderTargetView.Get(), Color);
 
@@ -192,8 +224,17 @@ auto Main() -> void {
 
 		GContext->Draw(3U, 0U);	
 
+		ImGui::ShowDemoWindow();
+
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
 		GSwapChain->Present(1, 0);
 	}
+
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	glfwDestroyWindow(Window);
 	glfwTerminate();
