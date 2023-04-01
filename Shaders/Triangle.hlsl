@@ -15,12 +15,20 @@ TOutputVS MainVS(TInputVS Input) {
 	return Output;
 }
 
+struct TCommonCB {
+	float4 Color;
+};
+
+cbuffer CommonCB : register(b0) {
+	TCommonCB CommonCB;
+}
+
 struct TOutputPS {
 	float4 Color : SV_TARGET0;
 };
 
 TOutputPS MainPS(TOutputVS Input) {
 	TOutputPS Output;
-	Output.Color = float4(Input.Color, 1.0);
+	Output.Color = float4(Input.Color * CommonCB.Color, 1.0);
 	return Output;
 }
